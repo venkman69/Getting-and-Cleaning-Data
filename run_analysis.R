@@ -24,14 +24,16 @@ featdf<-read.table(file("features.txt"),col.names=c("ID","Feature"))
 #5  5  tBodyAcc-std()-Y
 #6  6  tBodyAcc-std()-Z
 
+# a cleaning operation to remove the () characters so names are
+# a bit cleaner
+featclean<-apply(featdf,1,function(f) gsub('[()]',"",f[2]))
+
 # obtain a filtered dataset of feature that contain either 'std' or 'mean' in their names
 # this activity can be tailored to the end set. Note that the current filter will
 # include items such as angle(X,gravity*Mean*). This is in my opinion correct since
-# it is a metric that is driven by a mean value. If this is an incorrect interpretation,
-# then the grep can be tuned with regular expression: 'mean\\(|std\\(' this will force
-# the grep to look for the keywords immediately before a '(' character.
+# it is a metric that is driven by a mean value.
 
-gf<-grepl("mean|std",featdf$Feature,ignore.case = T)
+gf<-grepl("mean|std",featclean,ignore.case = T)
 # obtain a list of numeric and NULL, NULL allows us to skip columns during read.table
 colc<-sapply(gf,function(i) ifelse(i,"numeric","NULL"))
 
@@ -43,7 +45,7 @@ test_s<-as.numeric(readLines("test/subject_test.txt"))
 #pass column names, and column classes with the NULLs to skip columns. This should
 # reduce the memory footprint and improve efficiency of data manipulation
 
-test_x<-read.table("test/X_test.txt",colClasses = colc,col.names=featdf$Feature)
+test_x<-read.table("test/X_test.txt",colClasses = colc,col.names=featclean)
 
 # read y_test.txt to a data frame, and in addition set the col name as Activity 
 # and set the class as factor so we can apply custom levels from actdf 
@@ -69,7 +71,7 @@ train_s<-as.numeric(readLines("train/subject_train.txt"))
                    
 #pass column names, and column classes with the NULLs to skip columns. This should
 # reduce the memory footprint and improve efficiency of data manipulation
-train_x<-read.table("train/X_train.txt",colClasses = colc,col.names=featdf$Feature)
+train_x<-read.table("train/X_train.txt",colClasses = colc,col.names=featclean)
 
 # read y_train.txt to a data frame, and in addition set the col name as Activity 
 # and set the class as factor so we can apply custom levels from actdf 
