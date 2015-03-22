@@ -26,9 +26,9 @@ featdf<-read.table(file("features.txt"),col.names=c("ID","Feature"))
 
 # obtain a filtered dataset of feature that contain either 'std' or 'mean' in their names
 # this activity can be tailored to the end set. Note that the current filter will
-# include items such as <code>angle(X,gravity*Mean*)</code>. This is in my opinion correct since
+# include items such as angle(X,gravity*Mean*). This is in my opinion correct since
 # it is a metric that is driven by a mean value. If this is an incorrect interpretation,
-# then the grep can be tuned with regular expression: <code>'mean\\(|std\\('</code> this will force
+# then the grep can be tuned with regular expression: 'mean\\(|std\\(' this will force
 # the grep to look for the keywords immediately before a '(' character.
 
 gf<-grepl("mean|std",featdf$Feature,ignore.case = T)
@@ -94,7 +94,7 @@ m<-rbind(train_m,test_m)
 #> nrow(m)
 #[1] 10299
 
-# run aggregation using mean as function and ignore the first two columsn subject and Activity
+# run aggregation using mean as function and ignore the first two columns subject and Activity
 # 
 
 ag<-aggregate(m[,-c(1,2)],by=m[c("subject","Activity")],FUN=mean,na.rm=TRUE)
